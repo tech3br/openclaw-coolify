@@ -4,7 +4,6 @@ USER root
 
 # Install dependencies
 RUN apt-get update && apt-get install -y jq openssl lsof && rm -rf /var/lib/apt/lists/*
-RUN npm i -g pnpm
 # Add bootstrap script
 COPY scripts/bootstrap.sh /app/scripts/bootstrap.sh
 RUN chmod +x /app/scripts/bootstrap.sh
