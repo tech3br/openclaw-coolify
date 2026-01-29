@@ -3,10 +3,11 @@ set -e
 
 # State directories - Moltbot/Clawdbot overlap
 # Binary might look for either depending on version
-MOLT_STATE="/home/node/.moltbot"
-CLAW_STATE="/home/node/.clawdbot"
+# State directories
+MOLT_STATE="/root/.moltbot"
+CLAW_STATE="/root/.clawdbot"
 CONFIG_FILE="$MOLT_STATE/moltbot.json"
-WORKSPACE_DIR="/home/node/molt"
+WORKSPACE_DIR="/root/molt"
 
 mkdir -p "$MOLT_STATE" "$CLAW_STATE" "$WORKSPACE_DIR"
 chmod 700 "$MOLT_STATE" "$CLAW_STATE"
@@ -26,9 +27,10 @@ chmod 700 "$MOLT_STATE/credentials"
 # Universal Permission Hardening (Runtime Fail-safe)
 # Ensures all global binaries are always executable
 echo "🛡️ HARDENING CLI PERMISSIONS..."
-if [ -d "/home/node/.npm-global/bin" ]; then
-  chmod -R +x /home/node/.npm-global/bin/ || true
-fi
+# Universal Permission Hardening
+# Since we are root, we just ensure +x
+echo "🛡️ HARDENING CLI PERMISSIONS..."
+chmod -R +x /usr/local/bin/ || true
 
 # Tool Audit
 echo "🔍 AUDITING AI TOOL SUITE..."
@@ -41,11 +43,11 @@ for tool in moltbot claude kimi opencode gemini codex; do
 done
 
 # Ensure aliases work for interactive sessions
-echo "alias fd=fdfind" >> /home/node/.bashrc
-echo "alias bat=batcat" >> /home/node/.bashrc
-echo "alias ll='ls -alF'" >> /home/node/.bashrc
-echo "alias molty='moltbot'" >> /home/node/.bashrc
-echo "alias clawd='moltbot'" >> /home/node/.bashrc
+echo "alias fd=fdfind" >> /root/.bashrc
+echo "alias bat=batcat" >> /root/.bashrc
+echo "alias ll='ls -alF'" >> /root/.bashrc
+echo "alias molty='moltbot'" >> /root/.bashrc
+echo "alias clawd='moltbot'" >> /root/.bashrc
 
 # Generate config on first boot
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -122,7 +124,7 @@ cat >"$CONFIG_FILE" <<EOF
   },
   "agents": {
     "defaults": {
-      "workspace": "/home/node/molt",
+      "workspace": "/root/molt",
       "compaction": {
         "mode": "safeguard"
       },
@@ -146,17 +148,17 @@ cat >"$CONFIG_FILE" <<EOF
         "id": "main",
         "name": "Moltbot",
         "default": true,
-        "workspace": "/home/node/molt"
+        "workspace": "/root/molt"
       },
       {
         "id": "linkding",
         "name": "Linkding Agent",
-        "workspace": "/home/node/molt-linkding"
+        "workspace": "/root/molt-linkding"
       },
       {
         "id": "dbadmin",
         "name": "DB Administrator",
-        "workspace": "/home/node/molt-dbadmin"
+        "workspace": "/root/molt-dbadmin"
       }
     ]
   },
@@ -275,8 +277,10 @@ fi
 seed_agent() {
   local id="$1"
   local name="$2"
-  local dir="/home/node/molt-$id"
-  if [ "$id" = "main" ]; then dir="/home/node/molt"; fi
+  local id="$1"
+  local name="$2"
+  local dir="/root/molt-$id"
+  if [ "$id" = "main" ]; then dir="/root/molt"; fi
 
   if ! mkdir -p "$dir" 2>/dev/null; then
     echo "⚠️ WARNING: Could not create directory $dir. Check volume permissions."

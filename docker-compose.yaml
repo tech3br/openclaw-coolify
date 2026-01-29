@@ -4,8 +4,7 @@ services:
       context: .
       args:
         - MOLT_BOT_BETA=${MOLT_BOT_BETA:-false}
-    user: 'node'
-    restart: on-failure:3
+    restart: on-failure:10
     ulimits:
       nofile:
         soft: 65535
@@ -16,17 +15,17 @@ services:
       PORT: 18789
       NODE_ENV: production
       NODE_OPTIONS: '--max-old-space-size=4096'
-      HOME: /home/node
+      HOME: /root
       TERM: xterm-256color
       
       # Map Moltbot vars to internal Clawdbot vars
       CLAWDBOT_GATEWAY_BIND: lan
       CLAWDBOT_GATEWAY_PORT: ${MOLTBOT_GATEWAY_PORT:-18789}
       # Tell the binary where to look for state/config
-      MOLTBOT_STATE_DIR: /home/node/.moltbot
-      MOLTBOT_WORKSPACE: /home/node/molt
-      CLAWDBOT_STATE_DIR: /home/node/.moltbot
-      CLAWDBOT_WORKSPACE: /home/node/molt
+      MOLTBOT_STATE_DIR: /root/.moltbot
+      MOLTBOT_WORKSPACE: /root/molt
+      CLAWDBOT_STATE_DIR: /root/.moltbot
+      CLAWDBOT_WORKSPACE: /root/molt
 
       # API Keys injected from .env or Coolify
       OPENAI_API_KEY: ${OPENAI_API_KEY}
@@ -64,10 +63,10 @@ services:
       MOLT_BOT_BETA: ${MOLT_BOT_BETA:-false}
 
     volumes:
-      - moltbot-config:/home/node/.moltbot
-      - moltbot-workspace:/home/node/molt
-      - moltbot-linkding:/home/node/molt-linkding
-      - moltbot-dbadmin:/home/node/molt-dbadmin
+      - moltbot-config:/root/.moltbot
+      - moltbot-workspace:/root/molt
+      - moltbot-linkding:/root/molt-linkding
+      - moltbot-dbadmin:/root/molt-dbadmin
       # Secure: Socket mount removed in favor of proxy
       # - /var/run/docker.sock:/var/run/docker.sock
 
