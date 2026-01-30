@@ -467,6 +467,12 @@ if [ "${OPENCLAW_PRINT_ACCESS:-1}" = "1" ]; then
   echo ""
 fi
 
+# Install QMD Skills (Context search)
+if [ ! -d "skills/qmd-skills" ]; then
+    echo "📦 Installing QMD Skills..."
+    npx -y skills add http://github.com/levineam/qmd-skills >/dev/null 2>&1 || echo "⚠️ QMD Skills install warning (check logs)"
+fi
+
 # Cloudflare Tunnel Auto-Start
 if [ -n "$CF_TUNNEL_TOKEN" ]; then
     echo "🚇 Starting Cloudflare Tunnel..."
